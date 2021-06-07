@@ -4,7 +4,8 @@ const repoList = document.querySelector(".repo-list");
 const repoSection = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
 const languages = [];
-
+const backButton = document.querySelector(".view-repos");
+const searchInput = document.querySelector(".filter-repos");
 
 
 const gitUserInfo = async function (){
@@ -50,7 +51,7 @@ const gitRepoInfo = async function(){
 }
 
 const displayRepoInfo = function(repos){
-
+    searchInput.classList.remove("hide")
     for (const repo of repos) {
         const repoListInfo = document.createElement("li");
         repoListInfo.classList.add("repo");
@@ -85,6 +86,7 @@ const retrieveRepo = async function(repoName) {
 
     console.log(languages);
     displayRetrievedRepo(repoInfo, languages)
+    ;
 }
 
 const displayRetrievedRepo = function(repoInfo, languages) {
@@ -92,6 +94,7 @@ const displayRetrievedRepo = function(repoInfo, languages) {
     const repoDataDiv = document.createElement("div");
     repoData.classList.remove("hide");
     repoSection.classList.add("hide");
+    searchInput.classList.remove("hide");
     repoDataDiv.innerHTML = "";
     repoDataDiv.innerHTML = `
     <h3>Name: ${repoInfo.name}</h3>
@@ -101,7 +104,29 @@ const displayRetrievedRepo = function(repoInfo, languages) {
         <a class="visit" href=${repoInfo.html_url} target="_blank" rel="noreferrer noopener">View Repo on Github!</a>
         `
     repoData.append(repoDataDiv);
+    backButton.classList.remove("hide");
     
 }
 
+backButton.addEventListener("click", function(){
+    repoSection.classList.remove("hide");
+    repoData.classList.add("hide");
+    backButton.classList.add("hide");
+})
 
+searchInput.addEventListener("input", function(e){
+    const searchText = e.target.value;
+    console.log(searchText);
+    const repos = document.querySelectorAll(".repo");
+    const searchTextLower = searchText.toLowerCase();
+
+    for (let repo of repos) {
+        const repoLower = repo.innerText.toLowerCase();
+        if (repoLower.includes(searchTextLower)) {
+            repo.classList.remove("hide");
+        }
+        else {
+            repo.classList.add("hide");
+        }
+    }
+})
